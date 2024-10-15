@@ -1,6 +1,7 @@
 import os
 import streamlit as st
 from mistralai import Mistral
+import unidecode
 
 # Récupérer la clé API depuis les secrets
 api_key = st.secrets["api_key"]
@@ -24,20 +25,24 @@ authorized_questions = {
 
 # Ajout de variations des questions
 question_keywords = {
-    "formation": ["formation", "études", "bachelor"],
-    "expérience professionnelle": ["expérience", "alternance", "emploi", "job", "travail", "stage"],
-    "missions chez suez": ["suez", "missions", "tâches", "responsabilités"],
-    "passions": ["passions", "intérêts", "hobbies", "passion"],
-    "intérêt médical": ["médical", "santé", "cancer", "diabète", "maladies"],
+    "formation": ["formation", "etudes", "bachelor"],
+    "expérience professionnelle": ["experience", "alternance", "emploi", "job", "travail", "stage"],
+    "missions chez suez": ["suez", "missions", "taches", "responsabilites"],
+    "passions": ["passions", "interets", "hobbies", "passion"],
+    "intérêt médical": ["medical", "sante", "cancer", "diabete", "maladies"],
     "objectifs futurs": ["futurs", "avenir", "objectif", "projets"]
 }
 
 # Liste des salutations
 greetings = ["bonjour", "salut", "hello", "bonsoir", "coucou", "hey", "salam", "slt", "cc"]
 
+# Fonction pour normaliser l'input (supprimer les accents)
+def normalize_text(text):
+    return unidecode.unidecode(text.lower())
+
 # Fonction pour vérifier si une question correspond à une question autorisée ou une salutation
 def get_response_for_question(user_input):
-    user_input = user_input.lower()
+    user_input = normalize_text(user_input)  # Normaliser l'entrée de l'utilisateur
     # Si l'utilisateur salue le chatbot et qu'il n'y a pas de mots-clés de questions
     if any(greet in user_input for greet in greetings) and not any(
         keyword in user_input for keywords in question_keywords.values() for keyword in keywords):

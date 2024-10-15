@@ -2,11 +2,14 @@ import os
 import streamlit as st
 from mistralai import Mistral
 
-# Clé API directement dans le code (à remplacer par un secret dans un environnement de production)
-api_key = "19uJi51E8tUsWiH8ysAqhE6GB9awZMSI"
+
+
+# Récupérer la clé API depuis les secrets Streamlit
+api_key = st.secrets["API_KEY_MISTRAL"]
 
 # Initialiser Mistral avec la clé API
 client = Mistral(api_key=api_key)
+
 
 # Liste des questions autorisées avec réponses adaptées à ton profil
 authorized_questions = {

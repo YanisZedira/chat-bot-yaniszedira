@@ -1,22 +1,15 @@
 import os
 import streamlit as st
 from mistralai import Mistral
-from dotenv import load_dotenv
 
-# Charger les variables d'environnement depuis le fichier .env
-load_dotenv()
-
-# Récupérer la clé API à partir de l'environnement
-api_key = os.getenv("API_KEY_MISTRAL")
+# Récupérer la clé API depuis les secrets Streamlit
+api_key = st.secrets["API_KEY_MISTRAL"]
 
 # Vérifier si la clé API est présente
 if api_key is None:
-    st.error("Erreur : Clé API non définie. Assurez-vous que la clé API est définie dans le fichier .env.")
+    st.error("Erreur : Clé API non définie.")
 else:
-    # Modèle API Mistral
-    model = "mistral-large-latest"
-
-    # Initialisation du client Mistral
+    # Initialiser Mistral avec la clé API
     client = Mistral(api_key=api_key)
 
     # Liste des questions autorisées avec réponses adaptées à ton profil

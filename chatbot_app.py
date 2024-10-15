@@ -62,7 +62,7 @@ def generate_response(user_input):
         return f"Erreur lors de la génération de la réponse : {str(e)}"
 
 # Titre de l'application
-st.title("Chatbot Portfolio Professionnel de Yanis Zedira")
+st.title("Chatbot Portfolio de Yanis Zedira")
 
 # Initialiser l'historique des conversations s'il n'est pas déjà défini
 if 'chat_history' not in st.session_state:

@@ -33,7 +33,7 @@ question_keywords = {
 }
 
 # Liste des salutations
-greetings = ["bonjour", "salut", "hello", "bonsoir", "coucou", "hey"]
+greetings = ["bonjour", "salut", "hello", "bonsoir", "coucou", "hey","salam","slt","cc"]
 
 # Fonction pour vérifier si une question correspond à une question autorisée ou une salutation
 def get_response_for_question(user_input):

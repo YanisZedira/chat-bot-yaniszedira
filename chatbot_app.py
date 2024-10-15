@@ -2,14 +2,11 @@ import os
 import streamlit as st
 from mistralai import Mistral
 
-
-
 # Récupérer la clé API depuis les secrets
 api_key = st.secrets["api_key"]
 
 # Initialiser Mistral avec la clé API
 client = Mistral(api_key=api_key)
-
 
 # Liste des questions autorisées avec réponses adaptées à ton profil
 authorized_questions = {
@@ -35,11 +32,21 @@ question_keywords = {
     "objectifs futurs": ["futurs", "avenir", "objectif", "projets"]
 }
 
-# Fonction pour vérifier si une question correspond à une question autorisée
+# Liste des salutations
+greetings = ["bonjour", "salut", "hello", "bonsoir", "coucou", "hey"]
+
+# Fonction pour vérifier si une question correspond à une question autorisée ou une salutation
 def get_response_for_question(user_input):
+    user_input = user_input.lower()
+    # Si l'utilisateur salue le chatbot
+    if any(greet in user_input for greet in greetings):
+        return "Bonjour ! Comment puis-je vous aider ? Vous pouvez me poser des questions sur ma formation, mon expérience professionnelle ou mes passions."
+    
+    # Sinon, on cherche une correspondance dans les questions autorisées
     for key, keywords in question_keywords.items():
-        if any(keyword in user_input.lower() for keyword in keywords):
+        if any(keyword in user_input for keyword in keywords):
             return authorized_questions[key]
+    
     return None
 
 # Fonction pour générer une réponse
@@ -49,12 +56,16 @@ def generate_response(user_input):
         if response:
             return response
         else:
-            return "Désolé, je ne peux répondre qu'à des questions sur mon parcours professionnel, ma formation, mes missions chez Suez, et mes passions pour l'IA et la santé. Les questions autorisées sont listées ci-dessus."
+            return "Désolé, je ne peux répondre qu'à des questions sur mon parcours professionnel, ma formation, mes missions chez Suez, et mes passions pour l'IA et la santé."
     except Exception as e:
         return f"Erreur lors de la génération de la réponse : {str(e)}"
 
 # Titre de l'application
 st.title("Chatbot Portfolio Professionnel de Yanis Zedira")
+
+# Initialiser l'historique des conversations s'il n'est pas déjà défini
+if 'chat_history' not in st.session_state:
+    st.session_state.chat_history = []
 
 # Affichage des questions disponibles sous forme de boutons cliquables sur deux lignes
 st.write("### Questions disponibles :")
@@ -106,10 +117,6 @@ with col6:
         st.session_state.chat_history.append(("Vous", user_input))
         st.session_state.chat_history.append(("Bot", response))
 
-# Sauvegarde de l'historique des conversations
-if 'chat_history' not in st.session_state:
-    st.session_state.chat_history = []
-
 # Formulaire pour saisir une question manuellement
 with st.form(key='chat_form', clear_on_submit=True):
     user_input = st.text_input("Posez votre question :", key="input")
@@ -122,6 +129,7 @@ if submit_button and user_input:
     st.session_state.chat_history.append(("Bot", response))
 
 # Affichage de l'historique des échanges
+st.write("### Historique des conversations :")
 for sender, message in st.session_state.chat_history:
     if sender == "Vous":
         st.write(f"**{sender}:** {message}")

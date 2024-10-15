@@ -33,13 +33,14 @@ question_keywords = {
 }
 
 # Liste des salutations
-greetings = ["bonjour", "salut", "hello", "bonsoir", "coucou", "hey","salam","slt","cc"]
+greetings = ["bonjour", "salut", "hello", "bonsoir", "coucou", "hey", "salam", "slt", "cc"]
 
 # Fonction pour vérifier si une question correspond à une question autorisée ou une salutation
 def get_response_for_question(user_input):
     user_input = user_input.lower()
-    # Si l'utilisateur salue le chatbot
-    if any(greet in user_input for greet in greetings):
+    # Si l'utilisateur salue le chatbot et qu'il n'y a pas de mots-clés de questions
+    if any(greet in user_input for greet in greetings) and not any(
+        keyword in user_input for keywords in question_keywords.values() for keyword in keywords):
         return "Bonjour ! Comment puis-je vous aider ? Vous pouvez me poser des questions sur ma formation, mon expérience professionnelle ou mes passions."
     
     # Sinon, on cherche une correspondance dans les questions autorisées
